@@ -7,8 +7,15 @@ published: false
 publication_name: leaner_dev
 ---
 
+Leaner Technologies エンジニアのぐりこ( [@glico800](https://twitter.com/glico800) ) です。
+
+よくある **「このページから移動しますか？」** みたいな confirm 表示を挟む実装を Next.js を使ったプロダクトでやるといろいろと学びがあったので、備忘録的にまとめてみました。
+
 # やりたいこと
 フォーム入力中にページ遷移をしようとした際、入力データが失わる旨を confirm で警告したい。
+
+![表示イメージ](https://storage.googleapis.com/zenn-user-upload/7d0c41f51813-20230307.png)
+*こんなの*
 
 # 前提
 
