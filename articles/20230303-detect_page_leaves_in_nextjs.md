@@ -12,7 +12,7 @@ Leaner Technologies エンジニアのぐりこ( [@glico800](https://twitter.com
 よくある **「このページから移動しますか？」** みたいな confirm 表示を挟む実装を Next.js を使ったプロダクトでやってみたらいろいろと学びがあったので、備忘録的にまとめてみました。
 
 # やりたいこと
-フォーム入力中にページ遷移をしようとした際、入力データが失わる旨を confirm で警告したい。
+フォーム入力中にページ遷移をしようとした際、入力データが失われる旨を confirm で警告したい。
 
 ![表示イメージ](https://storage.googleapis.com/zenn-user-upload/7d0c41f51813-20230307.png)
 *こんなの*
@@ -59,7 +59,7 @@ export const usePageLeaveConfirmation = (disabled = false) => {
 
     // 2. App内ページへの遷移
     const pageChangeHandler = () => {
-        // beforePopStateですでのconfirm表示している場合はスキップ
+      // beforePopStateで既にconfirm表示している場合はスキップ
       if (!isBrowserBack && !window.confirm(message)) {
         throw 'changeRoute aborted'
       }
@@ -292,7 +292,7 @@ export const usePageLeaveConfirmation = (disabled = false) => {
 
     // 2. App内ページへの遷移
     const pageChangeHandler = () => {
-      // beforePopStateですでのconfirm表示している場合はスキップ
+      // beforePopStateで既にconfirm表示している場合はスキップ
       if (!isBrowserBack && !window.confirm(message)) {
         throw 'changeRoute aborted'
       }
