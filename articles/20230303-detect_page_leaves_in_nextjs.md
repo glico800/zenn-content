@@ -9,7 +9,7 @@ publication_name: leaner_dev
 
 Leaner Technologies エンジニアのぐりこ( [@glico800](https://twitter.com/glico800) ) です。
 
-よくある **「このページから移動しますか？」** みたいな confirm 表示を挟む実装を Next.js を使ったプロダクトでやるといろいろと学びがあったので、備忘録的にまとめてみました。
+よくある **「このページから移動しますか？」** みたいな confirm 表示を挟む実装を Next.js を使ったプロダクトでやってみたらいろいろと学びがあったので、備忘録的にまとめてみました。
 
 # やりたいこと
 フォーム入力中にページ遷移をしようとした際、入力データが失わる旨を confirm で警告したい。
@@ -107,15 +107,16 @@ Sentry.init({
 :::
 
 # 実装方針
+- ページ遷移を伴う各操作時に confirm を表示
 - 複数のフォームで利用することを想定してカスタムフックとして実装
-- 未入力のときなど confirm を表示したくないタイミングを考慮する
+- 未入力時など confirm を表示しないタイミングを指定できるようにする
 
 # 実装手順
 ## 0. カスタムフックの準備
 大枠の実装は下記の通り。
 
-- 未入力時などは confirm を表示しないようにする。
-- コンポーネントのアンマウント時にイベントハンドラの登録解除を忘れずに。
+- `disabled` の値によって未入力時などは confirm を表示しないようにする
+- コンポーネントのアンマウント時にイベントハンドラの登録解除を忘れずに
 
 ```tsx:usePageLeaveConfirmation.tsx
 import { useEffect } from 'react'
@@ -135,9 +136,10 @@ export const usePageLeaveConfirmation = (disabled = false) => {
 ```
 
 呼び出し側のイメージはこんな感じ。
-（細かいところはかなり省略している。）
 
 ```tsx:SampleForm.tsx
+import { usePageLeaveConfirmation } from 'hooks/usePageLeaveConfirmation'
+
 const SampleForm: React.FC<Props> = ({}) => {
   const {
     formState: { isDirty },
@@ -151,15 +153,12 @@ const SampleForm: React.FC<Props> = ({}) => {
 まずは `next/router` に依存しない App 外ページへの移動について考える。
 
 こちらは特になんの変哲もない `beforeunload` へのイベントハンドラ登録。
-ただし、[MDN](https://developer.mozilla.org/ja/docs/Web/API/Window/beforeunload_event#%E4%BE%8B) に記載があるように、互換性のため `event.returnValue` も書く必要がある。
 
 ```tsx:usePageLeaveConfirmation.tsx
 import { useEffect } from 'react'
 
 export const usePageLeaveConfirmation = (disabled = false) => {
   useEffect(() => {
-    const message = 'このページから移動しますか？入力された内容は保存されません。'
-
     // 1. App外ページへの遷移 or ブラウザリロード
     const beforeUnloadHandler = (event: BeforeUnloadEvent) => {
       event.preventDefault()
@@ -177,7 +176,11 @@ export const usePageLeaveConfirmation = (disabled = false) => {
 }
 ```
 
-ちなみに `event.returnValue = 'このページから移動しますか？'` のように書いても動くが、メッセージ部分は無視される。
+### 注意点
+
+- [MDN](https://developer.mozilla.org/ja/docs/Web/API/Window/beforeunload_event#%E4%BE%8B) に記載があるように、互換性のため `event.returnValue` も書く必要がある
+- 表示するメッセージは指定できない
+    - `event.returnValue = 'このページから移動しますか？'` のように書いても動くが、メッセージ部分は無視されてデフォルトのメッセージが表示される
 
 ## 2. App 内ページへの移動 / `routeChangeStart`
 次に `next/router` に依存する App 内ページへの移動について。
@@ -195,6 +198,7 @@ export const usePageLeaveConfirmation = (disabled = false) => {
     // 2. App内ページへの遷移
     const pageChangeHandler = () => {
       const message = 'このページから移動しますか？入力された内容は保存されません。'
+      
       if (!window.confirm(message)) {
         throw 'changeRoute aborted'
       }
@@ -210,7 +214,8 @@ export const usePageLeaveConfirmation = (disabled = false) => {
 }
 ```
 
-このとき、ページ遷移をキャンセルするために `throw` を使う必要があるが、このままだと Sentry にエラーが通知されてしまう。
+### 注意点
+ページ遷移をキャンセルするために `throw` を使う必要があるが、このままだと Sentry にエラーが通知されてしまう。
 
 ```
 UnhandledRejection
@@ -243,11 +248,11 @@ export const usePageLeaveConfirmation = (disabled = false) => {
   const router = useRouter()
 
   useEffect(() => {
-    const message = 'このページから移動しますか？入力された内容は保存されません。'
-
     // App内ページへのブラウザバック
     const setBeforePopState = () => {
       router.beforePopState(() => {
+        const message = 'このページから移動しますか？入力された内容は保存されません。'
+
         if (!confirm(message)) {
           // 書き換わってしまったURLを戻す
           window.history.pushState(null, '', router.asPath)
@@ -270,7 +275,8 @@ export const usePageLeaveConfirmation = (disabled = false) => {
 }
 ```
 
-また、`beforePopState` の処理の後に App 内ページ移動のために `routeChangeStart` へ登録した処理が走ってしまう。
+### 注意点
+`beforePopState` の処理の後に App 内ページ移動のために `routeChangeStart` へ登録した処理が走ってしまう。
 それをスキップするために `isBrowserBack` のようなフラグが必要になる。
 
 ```tsx:usePageLeaveConfirmation.tsx
@@ -322,6 +328,6 @@ export const usePageLeaveConfirmation = (disabled = false) => {
 ```
 
 # まとめのお気持ち
-ページから離れる時と言ってもいろいろと考慮することあるのがわかりました。
+ページから離れる時と言ってもいろいろと考慮することがあるのだとわかりました。
 
-今回は実装方法について網羅的に解説しているページを見つけられなかったため自分なりに書いてみたが、不具合や考慮漏れの可能性があればコメントをもらえると嬉しいです！
+今回は自分なりにいろいろと調べて書いてみたが、不具合や考慮漏れの可能性があればコメントをもらえると嬉しいです！
