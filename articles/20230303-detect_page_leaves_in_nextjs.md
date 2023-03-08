@@ -3,7 +3,7 @@ title: "Next.js のフォームでページ遷移前に confirm を表示した�
 emoji: "🔙"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["react", "nextjs", "nextrouter"]
-published: false
+published: true
 publication_name: leaner_dev
 ---
 
