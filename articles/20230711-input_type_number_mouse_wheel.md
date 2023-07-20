@@ -107,7 +107,5 @@ const onWheelHandler = (e: React.WheelEvent<HTMLInputElement>) => {
 
 また、マウスホイール操作の伝播を防止するため、 `e.stopPropagation()` も設定しておく。
 
-参考にしたサンプルコードの中には `e.currentTarget.focus()` も追加しているものがあったが、再度フォーカスする挙動が確認できなかった＆マウスホイール操作した後はフォーカスを外して次の入力や保存操作に移るだろうという想定で今回はなしにしている。
-
 # おわり
 PC の数値入力むずかしい（小並感）
