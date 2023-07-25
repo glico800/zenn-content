@@ -3,7 +3,7 @@ title: "input[type=\"number\"] のマウスホイール事故を防ぎたい"
 emoji: "🖱"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["html", "react", "frontend"]
-published: false
+published: true
 publication_name: leaner_dev
 ---
 
