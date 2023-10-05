@@ -24,6 +24,8 @@ next@13.1.5
 @sentry/nextjs@7.38.0
 ```
 
+※Next.js は Pages Router でのみ検証
+
 # TL;DR
 Next.js のフォームでページ遷移前に処理を挟む場合は、`beforeunload` を使った実装だけでは App 内でのページ遷移に対応できない。
 
