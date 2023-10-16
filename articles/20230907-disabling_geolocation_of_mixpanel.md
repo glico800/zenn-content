@@ -3,7 +3,7 @@ title: "Mixpanelで位置情報を表示しないようにする"
 emoji: "🌍"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["mixpanel"]
-published: false
+published: true
 publication_name: leaner_dev
 ---
 
