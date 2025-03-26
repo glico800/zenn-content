@@ -1,5 +1,5 @@
 ---
-title: "JavaScriptのnull/undefined判定の仕方をまとめてみた"
+title: "JavaScriptのnull/undefined判定の仕方いろいろ"
 emoji: "🐙"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["javascript"]
