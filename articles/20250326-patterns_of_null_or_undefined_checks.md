@@ -12,7 +12,7 @@ JavaScript で `null`/`undefined` 判定の書き方がいろいろあってコ�
 どちらかというと普段 JavaScript をあまり書かない人が読むことを想定して書く予定。
 
 # 前提知識
-JavaScript では Boolean に変換したときに `true` / `false` になる値のことをそれぞれ [Truthy (真値)](https://developer.mozilla.org/ja/docs/Glossary/Truthy)/[Falsy (偽値)](https://developer.mozilla.org/ja/docs/Glossary/Falsy) と呼ぶ。
+JavaScript では Boolean に変換したときに `true` / `false` になる値のことをそれぞれ [Truthy (真値)](https://developer.mozilla.org/ja/docs/Glossary/Truthy) / [Falsy (偽値)](https://developer.mozilla.org/ja/docs/Glossary/Falsy) と呼ぶ。
 
 # Truthy/Falsyを利用する時の罠
 `null`/`undefined` 判定のとき以下のように書きたくなるが、特定のケースで意図した通りに動かなかったり、それを考慮したコードレビューが大変だったりする。
