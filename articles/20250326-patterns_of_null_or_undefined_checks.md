@@ -8,11 +8,11 @@ publication_name: leaner_dev
 ---
 
 # なんの記事？
-JavaScript で `null`/`undefined` 判定の書き方がいろいろあってコードレビューとか説明するとき用の改めてまとめてみた。
+JavaScript で `null`/`undefined` 判定の書き方がいろいろあってコードレビューとか説明するとき用に改めてまとめてみた。
 どちらかというと普段 JavaScript をあまり書かない人が読むことを想定して書く予定。
 
 # 前提知識
-JavaScript では Boolean に変換したときに `true` / `false` になる値のことをそれぞれ [Truthy (真値)](https://developer.mozilla.org/ja/docs/Glossary/Truthy) [Falsy (偽値)](https://developer.mozilla.org/ja/docs/Glossary/Falsy) と呼ぶ。
+JavaScript では Boolean に変換したときに `true` / `false` になる値のことをそれぞれ [Truthy (真値)](https://developer.mozilla.org/ja/docs/Glossary/Truthy)/[Falsy (偽値)](https://developer.mozilla.org/ja/docs/Glossary/Falsy) と呼ぶ。
 
 # Truthy/Falsyを利用する時の罠
 `null`/`undefined` 判定のとき以下のように書きたくなるが、特定のケースで意図した通りに動かなかったり、それを考慮したコードレビューが大変だったりする。
@@ -34,7 +34,7 @@ if (unitPrice) { formatPrice(unitPrice) }
 なので、本記事では `if (value)` を使わないパターンのみまとめた。
 ※[論理否定演算子 (!)](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Operators/Logical_NOT) を使う `if (!value)` についても同じく除外
 
-# 先に個人的におすすめの書き方
+# 先におすすめの書き方
 ## if文
 ```js
 // null/undefined なら実行する
@@ -76,13 +76,13 @@ if(unitPrice == null) { console.log('unit price is null/undefined') }
 if(unitPrice != null) { formatPrice(unitPrice) }
 ```
 
-[等価演算子 (==)](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Operators/Equality)は比較する値同士の型が違う場合は型変換をしてみてから比較するという仕様のため、`'0'` と `0` のように型が違う値を等価だと判定してしまって困るなどの罠があり、基本的は使わない方がよい。
+[等価演算子 (==)](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Operators/Equality)は比較する値同士の型が違う場合は型変換をしてみてから比較するという仕様のため、`'0'` と `0` のように型が違う値を等価だと判定してしまって困るなどの罠があり、基本的には使わない方がよい。
 ただし、前述の利用して `== null` のように書くときは例外的に利用することがある。
 
-なぜ `== null` で `null`/`undefined` を両方判定できるかの説明はややこしいので省くが、完結に言うと `null` と `undefined` は型が異なるが値としては同じなので、値だけをみる[等価演算子 (==)](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Operators/Equality)では `null`/`undefined` 両方の判定ができる。（なので、`== undefined` と書いても同じ）
+なぜ `== null` で `null`/`undefined` を両方判定できるかの説明はややこしいので省くが、簡潔に言うと `null` と `undefined` は型が異なるが値としては同じなので、値だけをみる[等価演算子 (==)](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Operators/Equality)では `null`/`undefined` 両方の判定ができる。（なので、`== undefined` と書いても同じ）
 この辺りはあまり詳しく書いている公式ドキュメントが見つからなかったが、[null と undefined の違い](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Operators/null#null_%E3%81%A8_undefined_%E3%81%AE%E9%81%95%E3%81%84)あたりを読んでもらうと分かるかもしれない。
 
-そのため、どういう仕組みか知っていないと正しく読めないので、このパターンは使わないというルールにしている場合もありそう。
+どういう仕組みか知っていないと正しく読めないので、このパターンは使わないというルールにしている場合もありそう。
 
 ## `value ?? 'default value'`
 [Null 合体演算子 (??)](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing)を使って書くパターン。
@@ -107,7 +107,7 @@ const price = unitPrice || 0
 ```js
 // null/undefined ならデフォルト値（空文字）を代入
 const price = unitPrice || ''
-// => unitPrice が 0 のときに price が空文字にならない
+// => unitPrice が 0 のときに price が空文字になってしまう
 ```
 
 補足：`typescript-eslint` に [prefer-nullish-coalescing](https://typescript-eslint.io/rules/prefer-nullish-coalescing/) というルールがある。
@@ -125,4 +125,4 @@ if (unitPrice ?? false) { formatPrice(unitPrice) }
 ```
 
 # おわり
-ややこしい仕様も乗り越えてよき JavaScript ライフを！
+ややこしい仕様も乗り越えて、よき JavaScript ライフを！
