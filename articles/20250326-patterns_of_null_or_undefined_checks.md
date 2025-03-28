@@ -56,10 +56,10 @@ const price = unitPrice ?? 0
 
 ```js
 // null/undefined なら実行する
-if (value === null || value === undefined) { console.log('unit price is null/undefined') }
+if (unitPrice === null || unitPrice === undefined) { console.log('unit price is null/undefined') }
 
 // null/undefined 以外なら実行する
-if (value !== null && value !== undefined) { formatPrice(unitPrice) }
+if (unitPrice !== null && unitPrice !== undefined) { formatPrice(unitPrice) }
 ```
 
 シンプルで読みやすいが、ちょっと長いのが難点。
