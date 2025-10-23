@@ -27,7 +27,7 @@
   "homepage": "https://github.com/ezawa800/zenn-content#readme",
   "dependencies": {
     "exsc": "git+https://gist.github.com/cc7ad5bc1a8417b57accb254f31be6a1.git",
-    "zenn-cli": "^0.1.144"
+    "zenn-cli": "^0.2.7"
   },
   "devDependencies": {
     "textlint": "^13.3.1",
