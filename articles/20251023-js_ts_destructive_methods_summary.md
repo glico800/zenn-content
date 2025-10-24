@@ -3,7 +3,7 @@ title: "JavaScriptで配列を破壊しない方法まとめ"
 emoji: "💭"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["javascript", "typescript", "配列"]
-published: false
+published: true
 publication_name: leaner_dev
 ---
 
