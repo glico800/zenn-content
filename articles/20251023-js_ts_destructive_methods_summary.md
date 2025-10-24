@@ -13,6 +13,11 @@ publication_name: leaner_dev
 
 https://x.com/tonkotsuboy_com/status/1974076338027016274
 
+# 記事内サンプルコードの実行環境について
+一部 TypeScript のサンプルコードがあるため、実際に手元で動かしてみたい場合は [TS Playground](https://www.typescriptlang.org/play/) での実行がおすすめです。
+
+ただし、`toSorted()` `toReversed()` `toSpliced()` `with()` は ECMAScript2023 / Node.js 20 以降でないと使えません。[TS Playground](https://www.typescriptlang.org/play/) を使う場合は TS Config から「Target: ES2023」に設定してから実行してください。
+
 # はじめに
 ## 配列操作における破壊・非破壊とは？
 ※普段、破壊・非破壊という表現を使わない言語を触っている方向けです。
@@ -27,11 +32,32 @@ https://x.com/tonkotsuboy_com/status/1974076338027016274
 
 [鹿野さんのポストへの引用ポスト](https://x.com/kensukesaitocom/status/1974244883155083584)でも言及されている方がいましたが、既に一時配列になっている状態で非破壊メソッドを使うと、必要以上にメモリを消費するなどのデメリットもあるので、あくまで適材適所です。
 
-## 記事内サンプルコードの実行環境について
-一部 TypeScript のサンプルコードがあるため、実際に手元で動かしてみたい場合は [TS Playground](https://www.typescriptlang.org/play/) での実行がおすすめです。
+## 破壊的メソッドを使うと困るのはどんなとき？
+以下の例のように引数の配列に対して破壊的操作をしてしまったときです。
 
-ただし、`toSorted()` `toReversed()` `toSpliced()` `with()` は ECMAScript2023 / Node.js 20 以降でないと使えません。[TS Playground](https://www.typescriptlang.org/play/) を使う場合は TS Config から「Target: ES2023」に設定してから実行してください。
+この場合、メソッドの呼び出し元で破壊的操作がされたことに気づかず、引数に渡した配列をさらに別の処理でも使うことで予期せぬエラーに繋がります。
 
+```js
+const blackBoxSort = (array: number[]): number[] => {
+    return array.sort()
+}
+
+const numbers = [2, 3, 1, 4]
+const sortedNumbers = blackBoxSort(numbers)
+
+// 引数で渡したnumbersが実は変更されてしまっている
+console.log(`numbers: ${numbers}`) // => 1,2,3,4
+```
+
+## 引数で Array を受け取るには `readonly` をつけると安心
+TypeScript を使っている場合、引数の配列の型を `readonly` にしておくことで、実行前に破壊的操作を検知できます。
+
+```js
+const blackBoxSort = (array: readonly number[]): number[] => {
+    // Error: Property 'sort' does not exist on type 'readonly number[]'.
+    return array.sort()
+}
+```
 
 # 本編
 ## 1. `sort()` → `toSorted()`
@@ -224,33 +250,6 @@ console.log(`dna: ${dna}`) // => A,T,G,C
 ```js
 const dna = ['A', 'T', 'G', 'C']
 const newDna = dna.concat()
-```
-
-## 破壊的メソッドを使うと困るのはどんなとき？
-以下の例のように引数の配列に対して破壊的操作をしてしまったときです。
-
-この場合、メソッドの呼び出し元で破壊的操作がされたことに気づかず、引数に渡した配列をさらに別の処理でも使うことで予期せぬエラーに繋がります。
-
-```js
-const blackBoxSort = (array: number[]): number[] => {
-    return array.sort()
-}
-
-const numbers = [2, 3, 1, 4]
-const sortedNumbers = blackBoxSort(numbers)
-
-// 引数で渡したnumbersが実は変更されてしまっている
-console.log(`numbers: ${numbers}`) // => 1,2,3,4
-```
-
-## 引数で Array を受け取るには `readonly` をつけると安心
-TypeScript を使っている場合、引数の配列の型を `readonly` にしておくことで、実行前に破壊的操作を検知できます。
-
-```js
-const blackBoxSort = (array: readonly number[]): number[] => {
-    // Error: Property 'sort' does not exist on type 'readonly number[]'.
-    return array.sort()
-}
 ```
 
 # 参考
