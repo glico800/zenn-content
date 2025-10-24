@@ -13,9 +13,9 @@ publication_name: leaner_dev
 
 # はじめに
 ## 記事内サンプルコードの実行環境について
-[TS Playground](https://www.typescriptlang.org/play/) で記事内のサンプルコードを実行する場合は TS Config から「Target: ES2023」に設定してから実行してください。`toSorted()` `toReversed()` `toSpliced()` `with()` が ECMAScript2023 以降でないと使えません。 
+一部 TypeScript のサンプルコードがあるため、実際に手元で動かしてみたい場合は [TS Playground](https://www.typescriptlang.org/play/) での実行がおすすめです。
 
-※おまけ以外は JavaScript のコードなので、Chrome Devtools の Console での実行でも問題ありません。
+ただし、`toSorted()` `toReversed()` `toSpliced()` `with()` は ECMAScript2023 / Node.js 20 以降でないと使えないません。[TS Playground](https://www.typescriptlang.org/play/) を使う場合は TS Config から「Target: ES2023」に設定してから実行してください。
 
 ## 配列操作における破壊・非破壊とは？
 ※普段、破壊・非破壊という表現を使わない言語を触っている方向けです。
